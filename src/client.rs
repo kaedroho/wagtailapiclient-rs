@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use pages::PageQuery;
+use endpoints::pages::PageQuery;
 
 
 #[derive(Clone)]
