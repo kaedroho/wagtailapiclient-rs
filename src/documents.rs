@@ -1,9 +1,12 @@
+use std::rc::Rc;
+
 use rustc_serialize::json;
 
 use query::WagtailQuery;
+use client::WagtailClient;
 
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct DocumentMeta {
     pub content_type: String,
     pub detail_url: String,
@@ -11,8 +14,9 @@ pub struct DocumentMeta {
 }
 
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct Document {
+    client: Rc<WagtailClient>,
     pub id: usize,
     pub title: String,
     pub meta: DocumentMeta,
@@ -21,14 +25,16 @@ pub struct Document {
 
 #[derive(Clone)]
 pub struct DocumentQuery {
+    client: Rc<WagtailClient>,
     start: usize,
     stop: Option<usize>,
 }
 
 
 impl DocumentQuery {
-    pub fn new() -> DocumentQuery {
+    pub fn new(client: Rc<WagtailClient>) -> DocumentQuery {
         DocumentQuery {
+            client: client.clone(),
             start: 0,
             stop: None,
         }
@@ -60,6 +66,7 @@ impl WagtailQuery for DocumentQuery {
         let meta = item.get("meta").unwrap().as_object().unwrap();
 
         Document{
+            client: self.client.clone(),
             id: item.get("id").unwrap().as_u64().unwrap() as usize,
             title: item.get("title").unwrap().as_string().unwrap().to_owned(),
             meta: DocumentMeta{

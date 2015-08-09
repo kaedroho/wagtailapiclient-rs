@@ -1,17 +1,21 @@
+use std::rc::Rc;
+
 use rustc_serialize::json;
 
 use query::WagtailQuery;
+use client::WagtailClient;
 
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct ImageMeta {
     pub content_type: String,
     pub detail_url: String,
 }
 
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct Image {
+    client: Rc<WagtailClient>,
     pub id: usize,
     pub title: String,
     pub meta: ImageMeta,
@@ -20,14 +24,16 @@ pub struct Image {
 
 #[derive(Clone)]
 pub struct ImageQuery {
+    client: Rc<WagtailClient>,
     start: usize,
     stop: Option<usize>,
 }
 
 
 impl ImageQuery {
-    pub fn new() -> ImageQuery {
+    pub fn new(client: Rc<WagtailClient>) -> ImageQuery {
         ImageQuery {
+            client: client.clone(),
             start: 0,
             stop: None,
         }
@@ -59,6 +65,7 @@ impl WagtailQuery for ImageQuery {
         let meta = item.get("meta").unwrap().as_object().unwrap();
 
         Image{
+            client: self.client.clone(),
             id: item.get("id").unwrap().as_u64().unwrap() as usize,
             title: item.get("title").unwrap().as_string().unwrap().to_owned(),
             meta: ImageMeta{

@@ -1,17 +1,21 @@
+use std::rc::Rc;
+
 use rustc_serialize::json;
 
 use query::WagtailQuery;
+use client::WagtailClient;
 
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct PageMeta {
     pub content_type: String,
     pub detail_url: String,
 }
 
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct Page {
+    client: Rc<WagtailClient>,
     pub id: usize,
     pub title: String,
     pub meta: PageMeta,
@@ -20,13 +24,14 @@ pub struct Page {
 
 impl Page {
     pub fn get_children(&self) -> PageQuery {
-        PageQuery::new().child_of(&self)
+        PageQuery::new(self.client.clone()).child_of(&self)
     }
 }
 
 
 #[derive(Clone)]
 pub struct PageQuery {
+    client: Rc<WagtailClient>,
     start: usize,
     stop: Option<usize>,
     child_of_filter: Option<usize>,
@@ -34,8 +39,9 @@ pub struct PageQuery {
 
 
 impl PageQuery {
-    pub fn new() -> PageQuery {
+    pub fn new(client: Rc<WagtailClient>) -> PageQuery {
         PageQuery {
+            client: client.clone(),
             start: 0,
             stop: None,
             child_of_filter: None
@@ -74,6 +80,7 @@ impl WagtailQuery for PageQuery {
         let meta = item.get("meta").unwrap().as_object().unwrap();
 
         Page{
+            client: self.client.clone(),
             id: item.get("id").unwrap().as_u64().unwrap() as usize,
             title: item.get("title").unwrap().as_string().unwrap().to_owned(),
             meta: PageMeta{
