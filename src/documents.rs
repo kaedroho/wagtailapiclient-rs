@@ -1,0 +1,72 @@
+use rustc_serialize::json;
+
+use query::WagtailQuery;
+
+
+#[derive(Debug, Clone)]
+pub struct DocumentMeta {
+    pub content_type: String,
+    pub detail_url: String,
+    pub download_url: String,
+}
+
+
+#[derive(Debug, Clone)]
+pub struct Document {
+    pub id: usize,
+    pub title: String,
+    pub meta: DocumentMeta,
+}
+
+
+#[derive(Clone)]
+pub struct DocumentQuery {
+    start: usize,
+    stop: Option<usize>,
+}
+
+
+impl DocumentQuery {
+    pub fn new() -> DocumentQuery {
+        DocumentQuery {
+            start: 0,
+            stop: None,
+        }
+    }
+}
+
+
+impl WagtailQuery for DocumentQuery {
+    type Item = Document;
+
+    fn get_start_stop(&self) -> (usize, Option<usize>) {
+        (self.start, self.stop)
+    }
+
+    fn set_start_stop(&mut self, start: usize, stop: Option<usize>) {
+        self.start = start;
+        self.stop = stop;
+    }
+
+    fn get_endpoint_url(&self) -> String {
+        "http://wagtailapi.kaed.uk/api/v1/documents/".to_owned()
+    }
+
+    fn results_attr_name(&self) -> String {
+        "documents".to_owned()
+    }
+
+    fn process_item(&self, item: &json::Object) -> Self::Item {
+        let meta = item.get("meta").unwrap().as_object().unwrap();
+
+        Document{
+            id: item.get("id").unwrap().as_u64().unwrap() as usize,
+            title: item.get("title").unwrap().as_string().unwrap().to_owned(),
+            meta: DocumentMeta{
+                content_type: meta.get("type").unwrap().as_string().unwrap().to_owned(),
+                detail_url: meta.get("detail_url").unwrap().as_string().unwrap().to_owned(),
+                download_url: meta.get("download_url").unwrap().as_string().unwrap().to_owned(),
+            }
+        }
+    }
+}

@@ -1,0 +1,12 @@
+[package]
+name = "wagtailapi"
+version = "0.1.0"
+authors = ["Karl Hobley <karlhobley10@gmail.com>"]
+
+[dependencies]
+hyper = "0.6.8"
+rustc-serialize = "0.3"
+
+[[example]]
+name = "fetch_page"
+path = "examples/fetch_page/main.rs"
