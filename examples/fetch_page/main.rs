@@ -1,7 +1,7 @@
-extern crate wagtailapi;
+extern crate wagtailapiclient;
 
-use wagtailapi::client::WagtailClient;
-use wagtailapi::query::WagtailQuery;
+use wagtailapiclient::client::WagtailClient;
+use wagtailapiclient::query::WagtailQuery;
 
 
 fn main() {
