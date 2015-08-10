@@ -79,3 +79,10 @@ impl WagtailQuery for ImageQuery {
         }
     }
 }
+
+
+impl WagtailClient {
+    pub fn images(&self) -> ImageQuery {
+        ImageQuery::new(Rc::new(self.clone()))
+    }
+}

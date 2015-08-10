@@ -94,3 +94,10 @@ impl WagtailQuery for PageQuery {
         }
     }
 }
+
+
+impl WagtailClient {
+    pub fn pages(&self) -> PageQuery {
+        PageQuery::new(Rc::new(self.clone()))
+    }
+}

@@ -81,3 +81,10 @@ impl WagtailQuery for DocumentQuery {
         }
     }
 }
+
+
+impl WagtailClient {
+    pub fn documents(&self) -> DocumentQuery {
+        DocumentQuery::new(Rc::new(self.clone()))
+    }
+}

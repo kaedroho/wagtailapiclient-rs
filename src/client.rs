@@ -4,8 +4,6 @@ use std::io::Read;
 use hyper::client::Client;
 use rustc_serialize::json;
 
-use endpoints::pages::PageQuery;
-
 
 #[derive(Clone)]
 pub struct WagtailClient {
@@ -18,10 +16,6 @@ impl WagtailClient {
         WagtailClient{
             base_url: base_url.to_owned()
         }
-    }
-
-    pub fn pages(&self) -> PageQuery {
-        PageQuery::new(Rc::new(self.clone()))
     }
 
     pub fn get(&self, url: &str) -> json::Json {
