@@ -1,16 +1,17 @@
 use std::cmp;
-use std::io::Read;
+use std::rc::Rc;
 use std::clone::Clone;
 
-use hyper::client::Client;
 use rustc_serialize::json;
 
 use iterator::WagtailIterator;
+use client::WagtailClient;
 
 
 pub trait WagtailQuery: Clone {
     type Item;
 
+    fn get_client(&self) -> Rc<WagtailClient>;
     fn get_start_stop(&self) -> (usize, Option<usize>);
     fn set_start_stop(&mut self, start: usize, stop: Option<usize>);
     fn get_endpoint_url(&self) -> String;
@@ -45,16 +46,9 @@ pub trait WagtailQuery: Clone {
     }
 
     fn fetch(&self) -> Option<Vec<Self::Item>> {
+        let json = self.get_client().get(&self.get_endpoint_url());
         let mut items = Vec::new();
 
-        let client = Client::new();
-        let url = self.get_endpoint_url();
-        let mut response = client.get(&url).send().unwrap();
-
-        let mut s = String::new();
-        response.read_to_string(&mut s).unwrap();
-
-        let json = json::Json::from_str(&s).unwrap();
         let obj = json.as_object().unwrap();
         let results = obj.get(&self.results_attr_name()).unwrap().as_array().unwrap();
 

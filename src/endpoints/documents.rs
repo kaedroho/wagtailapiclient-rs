@@ -45,6 +45,10 @@ impl DocumentQuery {
 impl WagtailQuery for DocumentQuery {
     type Item = Document;
 
+    fn get_client(&self) -> Rc<WagtailClient> {
+        self.client.clone()
+    }
+
     fn get_start_stop(&self) -> (usize, Option<usize>) {
         (self.start, self.stop)
     }
@@ -55,7 +59,7 @@ impl WagtailQuery for DocumentQuery {
     }
 
     fn get_endpoint_url(&self) -> String {
-        "http://wagtailapi.kaed.uk/api/v1/documents/".to_owned()
+        "documents/".to_owned()
     }
 
     fn results_attr_name(&self) -> String {

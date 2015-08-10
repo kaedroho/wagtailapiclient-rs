@@ -44,6 +44,10 @@ impl ImageQuery {
 impl WagtailQuery for ImageQuery {
     type Item = Image;
 
+    fn get_client(&self) -> Rc<WagtailClient> {
+        self.client.clone()
+    }
+
     fn get_start_stop(&self) -> (usize, Option<usize>) {
         (self.start, self.stop)
     }
@@ -54,7 +58,7 @@ impl WagtailQuery for ImageQuery {
     }
 
     fn get_endpoint_url(&self) -> String {
-        "http://wagtailapi.kaed.uk/api/v1/images/".to_owned()
+        "images/".to_owned()
     }
 
     fn results_attr_name(&self) -> String {

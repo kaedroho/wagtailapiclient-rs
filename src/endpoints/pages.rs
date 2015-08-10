@@ -59,6 +59,10 @@ impl PageQuery {
 impl WagtailQuery for PageQuery {
     type Item = Page;
 
+    fn get_client(&self) -> Rc<WagtailClient> {
+        self.client.clone()
+    }
+
     fn get_start_stop(&self) -> (usize, Option<usize>) {
         (self.start, self.stop)
     }
@@ -69,7 +73,7 @@ impl WagtailQuery for PageQuery {
     }
 
     fn get_endpoint_url(&self) -> String {
-        "http://wagtailapi.kaed.uk/api/v1/pages/".to_owned()
+        "pages/".to_owned()
     }
 
     fn results_attr_name(&self) -> String {
