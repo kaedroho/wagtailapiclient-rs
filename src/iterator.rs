@@ -10,9 +10,9 @@ pub struct WagtailIterator<Q: WagtailQuery> {
 
 
 impl <Q: WagtailQuery> WagtailIterator<Q> {
-    pub fn new(query: &Q) -> WagtailIterator<Q> {
+    pub fn new(query: Q) -> WagtailIterator<Q> {
         WagtailIterator{
-            query: Box::new(query.clone()),
+            query: Box::new(query),
             item_buffer: None,
         }
     }

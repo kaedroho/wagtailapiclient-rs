@@ -64,6 +64,6 @@ pub trait WagtailQuery: Clone {
     }
 
     fn iter(&self) -> WagtailIterator<Self> {
-        WagtailIterator::new(self)
+        WagtailIterator::new(self.clone())
     }
 }

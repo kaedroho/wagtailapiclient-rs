@@ -41,7 +41,7 @@ pub struct PageQuery {
 impl PageQuery {
     pub fn new(client: Rc<WagtailClient>) -> PageQuery {
         PageQuery {
-            client: client.clone(),
+            client: client,
             start: 0,
             stop: None,
             child_of_filter: None

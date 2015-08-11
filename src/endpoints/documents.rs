@@ -34,7 +34,7 @@ pub struct DocumentQuery {
 impl DocumentQuery {
     pub fn new(client: Rc<WagtailClient>) -> DocumentQuery {
         DocumentQuery {
-            client: client.clone(),
+            client: client,
             start: 0,
             stop: None,
         }

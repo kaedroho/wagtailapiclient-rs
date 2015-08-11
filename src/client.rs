@@ -1,4 +1,3 @@
-use std::rc::Rc;
 use std::io::Read;
 
 use hyper::client::Client;

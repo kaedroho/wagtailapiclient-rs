@@ -33,7 +33,7 @@ pub struct ImageQuery {
 impl ImageQuery {
     pub fn new(client: Rc<WagtailClient>) -> ImageQuery {
         ImageQuery {
-            client: client.clone(),
+            client: client,
             start: 0,
             stop: None,
         }
